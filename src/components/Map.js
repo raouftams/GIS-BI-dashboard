@@ -1,15 +1,40 @@
-import { MapContainer, TileLayer, LayersControl } from 'react-leaflet'
+import { MapContainer, TileLayer, LayersControl, GeoJSON} from 'react-leaflet'
+import axios from 'axios'
 import 'leaflet/dist/leaflet.css'
-import React from 'react'
+import { React, useState, useEffect } from 'react'
 import './map.css'
 
 
 const { BaseLayer } = LayersControl
 
-function Map() {
+const MyData = () => {
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    const url = 'http://127.0.1:8000/all-towns'
+    const getData = async () => {
+      const response = await axios.get(url, {
+        headers: {"Access-Control-Allow-Origin": "*"}
+      });
+      setData(response.data)
+    };
+
+    getData();
+
+  }, []);
+
+  if (data) {
+    return <GeoJSON data={data}/>
+  } else {
+    return null;
+  }
+};
+
+const Maps = () => {
   return (
     <div className='map-container'>
-        <MapContainer className='map' center={[51.505, -0.09]} zoom={13}>
+        <MapContainer id='mapId' className='map' center={[36.7218005, 3.0988167]} zoom={11}>
+            <MyData/>
             <LayersControl>
                 <BaseLayer name='OSM'>
                     <TileLayer
@@ -29,4 +54,4 @@ function Map() {
   )
 }
 
-export default Map
+export default Maps
