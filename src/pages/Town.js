@@ -12,6 +12,8 @@ import RotationIcon from '../images/RotationIcon'
 import VehicleIcon from '../images/VehicleIcon'
 import WasteBinIcon from '../images/WasteBinIcon'
 import UserIcon from '../images/UserIcon'
+import RotationTrend from '../components/RotationTrend'
+import RotationTrendHour from '../components/RotationTrendHour'
 
 import './main.css'
 
@@ -66,6 +68,14 @@ const Town = () => {
                 <div className='w-4/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
                     <SeasonalityChart code={townCode} />
                 </div>
+            </div>
+            <div className='flex justify-around mt-2 mx-4'>
+              <div className='w-3/6 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+                <RotationTrend code={townCode}/>
+              </div>
+              <div className='w-3/6 h-auto ml-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+                <RotationTrendHour code={townCode}/>
+              </div>
             </div>
         </div>
     )

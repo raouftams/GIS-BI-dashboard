@@ -10,9 +10,11 @@ import SeasonalityChart from '../components/SeasonalityChart'
 import SeasonBarChart from '../components/SeasonBarChart'
 import TrendChart from '../components/TrendChart'
 import HolidayBarChart from '../components/HolidayBarChart'
+import RotationTrendHour from '../components/RotationTrendHour'
 
 import './main.css'
 import VehicleIcon from '../images/VehicleIcon'
+import RotationTrend from '../components/RotationTrend'
 
 const Main = () => {
   const [info, setinfo] = useState()
@@ -28,6 +30,44 @@ const Main = () => {
       
   }, [])
 
+  const WasteStats = () =>{
+    return (
+      <div>
+        <div className='flex justify-around mt-2 mx-4'>
+          <div className='w-3/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+            <TrendChart code={null}/>
+          </div>
+          <div className='w-2/5 h-auto ml-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+            <HolidayBarChart code={null}/>
+          </div>
+        </div>
+        <div className='flex justify-around mt-2 mx-4'>
+          <div className='w-2/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+            <SeasonBarChart code={null}/>
+          </div>
+          <div className='w-4/5 h-auto ml-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+            <SeasonalityChart code={null}/>
+          </div>
+        </div>
+      </div>
+        
+    )
+  }
+
+  const RotationStats = () =>{
+    return (
+        <div className='flex justify-around mt-2 mx-4'>
+          <div className='w-3/6 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+            <RotationTrend code={null}/>
+          </div>
+          <div className='w-3/6 h-auto ml-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+            <RotationTrendHour code={null}/>
+          </div>
+        </div>
+        
+    )
+  }
+
   return (
     <div className='body'>
         <NavBar/>
@@ -41,23 +81,11 @@ const Main = () => {
               <Maps/>
           </div>
         </div>
-        <div className='flex justify-around mt-2 mx-4'>
-          <div className='w-3/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-            <TrendChart code={null}/>
-          </div>
-          <div className='w-2/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-            <HolidayBarChart code={null}/>
-          </div>
-        </div>
-          <div className='flex justify-around mt-2 mx-4'>
-            <div className='w-2/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-              <SeasonBarChart code={null}/>
-            </div>
-            <div className='w-4/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-              <SeasonalityChart code={null}/>
-            </div>
-          </div>
-    </div>
+        
+        <WasteStats/>
+        <RotationStats/>
+        
+      </div>
   )
 }
 
