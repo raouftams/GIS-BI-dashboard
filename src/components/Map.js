@@ -8,6 +8,7 @@ import 'leaflet/dist/leaflet.css'
 import './map.css'
 
 const { BaseLayer } = LayersControl
+const Colors = ["#E74C3C", "#9B59B6", "#3498DB", "#ECF0F1", "#F1C40F", "#2ECC71"] 
 
 const Maps = ({selected, type}) => {
   //selected is the code property of the selected layer
@@ -16,9 +17,12 @@ const Maps = ({selected, type}) => {
   const geoJsonRef = useRef()
   const [data, setData] = useState(null);
   const [importantZones, setImportantZones] = useState(null)
-  const [isImportant, setIsImportant] = useState()
+  const [isImportant, setIsImportant] = useState(false)
+  const [cluster, setCluster] = useState(null)
+  const [clusterPeriod, setClusterPeriod] = useState()
+  const [isClustering, setIsClustering] = useState(false)
   const [currentSeason, setCurrentSeason] = useState()
-  const [isUnity, setIsUnity] = useState()
+  const [isUnity, setIsUnity] = useState(false)
 
   const getSelectedTown = (e) => {
     const properties = e.target.feature.properties
@@ -54,29 +58,56 @@ const Maps = ({selected, type}) => {
           mouseout: closePopup
         })
       }
+
+      if(isClustering){
+        if(cluster != null){
+          var currentPeriodCluster = null
+          switch (clusterPeriod) {
+            case 'month':
+              currentPeriodCluster = cluster.month
+              break;
+            case 'year':
+              currentPeriodCluster = cluster.year
+              break;
+            case 'day':
+              currentPeriodCluster = cluster.day
+              break;
+            default:
+              break;
+          }
+          if(currentPeriodCluster != null){
+            const clusterLabel = currentPeriodCluster.labels[currentPeriodCluster.towns.indexOf(feature.properties.code)]
+            layer.setStyle({
+              color: Colors[clusterLabel]
+            })
+          }
+        }
+      }
       
 
       if(isImportant){
-        var important = []
-        if(currentSeason === 'winter'){
+        if(importantZones != null){
+          var important = []
+          if(currentSeason === 'winter'){
             important = importantZones.winter
-        }
-        if(currentSeason === 'summer'){
-          important = importantZones.summer
-        }
-        if(currentSeason === 'spring'){
-          important = importantZones.spring
-        }
-        if(currentSeason === 'autumn'){
+          }
+          if(currentSeason === 'summer'){
+            important = importantZones.summer
+          }
+          if(currentSeason === 'spring'){
+            important = importantZones.spring
+          }
+          if(currentSeason === 'autumn'){
             important = importantZones.autumn
-        }
-        
-        if(important.includes(feature.properties.code)){
-          layer.setStyle({
-            color: 'red'
-          })
-        }
-        
+          }
+          if(important){
+            if(important.includes(feature.properties.code)){
+              layer.setStyle({
+                color: 'red'
+              })
+            }
+          }
+        }        
       }
 
       //if town is selected then set style to the polygon
@@ -96,9 +127,23 @@ const Maps = ({selected, type}) => {
 
   }
 
+  const selectClusterZones = () => {
+    setIsClustering(true)
+    setImportantZones(false)
+    geoJsonRef.current.addData(data)
+  }
+
+  const monthCluster = () => {
+    if(geoJsonRef){
+      geoJsonRef.current.clearLayers()
+      setClusterPeriod('month')
+      selectClusterZones()
+    }
+  }
 
   const selectImportantZones = (season) => {
     setIsImportant(true)
+    setIsClustering(false)
     setCurrentSeason(season)
     geoJsonRef.current.addData(data)
   }
@@ -152,6 +197,13 @@ const Maps = ({selected, type}) => {
           setImportantZones(JSON.parse(response.data))
         });
       }
+      if(cluster == null){
+        axios.get('http://127.0.0.1:8000/all-towns/clustering', {
+          headers: {"Access-Control-Allow-Origin": "*"}
+        }).then((response) => {
+          setCluster(JSON.parse(response.data))
+        });
+      }
         
     }, []);
 
@@ -165,6 +217,7 @@ const Maps = ({selected, type}) => {
   const loadUnities = () => {
     if(geoJsonRef){
       setIsImportant(false)
+      setIsClustering(false)
       geoJsonRef.current.clearLayers()
       setIsUnity(true)
       axios.get('http://127.0.0.1:8000/all-unities', {
@@ -202,7 +255,7 @@ const Maps = ({selected, type}) => {
           <p className='text-gray-300 font-bold text-center pt-4 mt-3'>Groupement par tandence</p>
           <div className='flex justify-between mx-2 mt-3'>
             <button className='w-20 mt-1 bg-dark-50 hover:bg-gray-700 text-gray-300 rounded-sm' onClick={markWinter}>année</button>
-            <button className='w-20 mt-1 bg-dark-50 hover:bg-gray-700 text-gray-300 rounded-sm' onClick={markSpring}>mois</button>
+            <button className='w-20 mt-1 bg-dark-50 hover:bg-gray-700 text-gray-300 rounded-sm' onClick={monthCluster}>mois</button>
             <button className='w-20 mt-1 bg-dark-50 hover:bg-gray-700 text-gray-300 rounded-sm' onClick={markAutumn}>jour</button>
           </div>
           <p className='text-gray-300 font-bold text-center pt-4 mt-4'>Données géographiques</p>
@@ -217,7 +270,7 @@ const Maps = ({selected, type}) => {
   }
 
   return (
-    <div className='map-container h-3/6 flex justify-between'>
+    <div className='map-container h-3/6 flex justify-between rounded shadow-lg'>
         <MapContainer id='mapId' className='map' center={[36.7218005, 3.0988167]} zoom={10}>
             <MyData/>
             <LayersControl>
