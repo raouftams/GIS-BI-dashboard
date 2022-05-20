@@ -190,14 +190,14 @@ const Maps = ({selected, type}) => {
       if(data == null){
         getData();
       }
-      if(importantZones == null){
+      if(importantZones == null && selected == null){
         axios.get('http://127.0.0.1:8000/stats/waste/change-rate-by-season', {
           headers: {"Access-Control-Allow-Origin": "*"}
         }).then((response) => {
           setImportantZones(JSON.parse(response.data))
         });
       }
-      if(cluster == null){
+      if(cluster == null && selected == null){
         axios.get('http://127.0.0.1:8000/all-towns/clustering', {
           headers: {"Access-Control-Allow-Origin": "*"}
         }).then((response) => {

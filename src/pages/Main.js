@@ -11,6 +11,8 @@ import SeasonBarChart from '../components/SeasonBarChart'
 import TrendChart from '../components/TrendChart'
 import HolidayBarChart from '../components/HolidayBarChart'
 import RotationTrendHour from '../components/RotationTrendHour'
+import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 import './main.css'
 import VehicleIcon from '../images/VehicleIcon'
@@ -31,6 +33,33 @@ const Main = () => {
   }, [])
 
   const WasteStats = () =>{
+    if(!info){
+      return(
+        <div>
+          <div className='flex justify-around mt-2 mx-4'>
+            <div className='w-3/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+            <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                <p>
+                    <Skeleton count={1} height={30} />
+                    <Skeleton count={1} height={200} />
+                </p>
+            </SkeletonTheme>
+            </div>
+            <div className='w-2/5 h-auto ml-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+
+            </div>
+          </div>
+          <div className='flex justify-around mt-2 mx-4'>
+            <div className='w-2/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+
+            </div>
+            <div className='w-4/5 h-auto ml-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+
+            </div>
+          </div>
+        </div>
+      )  
+    }
     return (
       <div>
         <div className='flex justify-around mt-2 mx-4'>
@@ -55,6 +84,9 @@ const Main = () => {
   }
 
   const RotationStats = () =>{
+    if(!info){
+      return null
+    }
     return (
         <div className='flex justify-around mt-2 mx-4'>
           <div className='w-3/6 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
@@ -67,7 +99,7 @@ const Main = () => {
         
     )
   }
-
+  
   return (
     <div className='body'>
         <NavBar/>
@@ -81,10 +113,10 @@ const Main = () => {
               <Maps/>
           </div>
         </div>
-        
-        <WasteStats/>
-        <RotationStats/>
-        
+        <div>
+          <WasteStats/>
+          <RotationStats/>
+        </div>
       </div>
   )
 }
