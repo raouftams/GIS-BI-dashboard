@@ -38,16 +38,16 @@ const Town = () => {
         <div className='body'>
             <NavBar/>
             <div className='flex justify-between'>
-              <div className='h-full w-1/5'>
+              <div className='h-full w-1/4'>
                 <Card title={'Rotations'} image={<RotationIcon/>} value={townInfo ? townInfo.rotations : 0}/>
                 <Card title={'Quantité déchets (T)'} image={<WasteBinIcon/>} value={townInfo ? Math.floor(townInfo.waste_qte/1000) : 0}/>
                 <Card title={'Véhicules utilisés'} image={<VehicleIcon/>} value={townInfo ? townInfo.used_vehicles : 0}/>
               </div>
         
               <div className='w-2/3 h-2/4 mt-3'>
-                  <Maps selected={townCode}/>
+                  <Maps selected={townCode} type={'town'}/>
               </div>
-              <div className='h-full w-1/5'>
+              <div className='h-full w-1/4'>
                 <Card title={'Rotations/Jour'} image={<RotationIcon/>} value={townInfo ? townInfo.rotations_by_day : 0}/>
                 <Card title={'Ratio'} image={<WasteBinIcon/>} value={townInfo ? townInfo.ratio : 0}/>
                 <Card title={'Population'} image={<UserIcon/>} value={townInfo ? townInfo.population : 0}/>

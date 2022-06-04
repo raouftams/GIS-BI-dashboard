@@ -41,20 +41,33 @@ const Main = () => {
             <SkeletonTheme baseColor="#202020" highlightColor="#444">
                 <p>
                     <Skeleton count={1} height={30} />
-                    <Skeleton count={1} height={200} />
+                    <Skeleton count={1} height={370} />
                 </p>
             </SkeletonTheme>
             </div>
             <div className='w-2/5 h-auto ml-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-
+            <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                <p>
+                    <Skeleton count={1} height={400} />
+                </p>
+            </SkeletonTheme>
             </div>
           </div>
           <div className='flex justify-around mt-2 mx-4'>
             <div className='w-2/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-
+            <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                <p>
+                    <Skeleton count={1} height={400} />
+                </p>
+            </SkeletonTheme>
             </div>
             <div className='w-4/5 h-auto ml-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-
+            <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                <p>
+                    <Skeleton count={1} height={30} />
+                    <Skeleton count={1} height={370} />
+                </p>
+            </SkeletonTheme>
             </div>
           </div>
         </div>
@@ -104,7 +117,7 @@ const Main = () => {
     <div className='body'>
         <NavBar/>
         <div className='flex justify-between'>
-          <div className='w-1/5 h-full'>
+          <div className='w-1/4 h-full'>
             <Card title={'Rotations'} image={<RotationIcon/>} value={info ? info.rotations : 0}/>
             <Card title={'Quantité déchets (T)'} image={<WasteBinIcon/>} value={info ? Math.floor(info.waste_qte/1000) : 0}/>
             <Card title={'Véhicules'} image={<VehicleIcon/>} value={info ? info.vehicles : 0}/>
