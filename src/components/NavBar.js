@@ -27,10 +27,10 @@ function NavBar() {
                   </Link>
 
                   <Link
-                    to="/rotations"
+                    to="/stats/town/quantity/2021/12"
                     className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
-                    Rotations
+                    Statistiques
                   </Link>
 
                   <Link
@@ -116,10 +116,10 @@ function NavBar() {
                   </Link>
 
                   <Link
-                    to="/rotations"
+                    to="/stats"
                     className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
-                    Rotations
+                    Statistiques
                   </Link>
 
                   <Link
