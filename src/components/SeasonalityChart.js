@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2';
 import ZoomPlugin from  'chartjs-plugin-zoom'
 import 'chartjs-plugin-zoom'
+import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -130,7 +131,16 @@ const SeasonalityChart = ({code, type}) => {
       <Line options={options} data={data} labels={labels} />
     )
   }
-  return null
+  return (
+    <div>
+      <SkeletonTheme baseColor="#202020" highlightColor="#444">
+        <p>
+            <Skeleton count={1} height={30} />
+            <Skeleton count={1} height={370} />
+        </p>
+      </SkeletonTheme>
+    </div>
+  )
   
 }
 

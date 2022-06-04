@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2';
 import ZoomPlugin from  'chartjs-plugin-zoom'
 import 'chartjs-plugin-zoom'
+import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -90,29 +91,41 @@ const RotationTrendHour = ({code, type}) => {
           url = `http://127.0.0.1:8000/stats/rotations/trend/hour/town/${code.code}`
         }
       }else{
-        url = 'http://127.0.0.1:8000/stats/rotations/trend/all-towns/hour'
+        url = `http://127.0.0.1:8000/stats/rotations/trend/all-towns/hour`
       }
       const response = await axios.get(url, {
         headers: {"Access-Control-Allow-Origin": "*"}
       })
       const jsonData = JSON.parse(response.data)
-      setLabels(jsonData.labels)
+      setLabels(jsonData.rotations.labels)
       //turning data to x: y format
-      const xyData = []
-      for(var i=0; i<jsonData.labels.length; i++){
-        xyData.push({
-          x: jsonData.labels[i],
-          y: jsonData.values[i]
+      const xyDataRotations = [] 
+      const xyDataCompactRate = []
+      for(var i=0; i<jsonData.rotations.labels.length; i++){
+        xyDataRotations.push({
+          x: jsonData.rotations.labels[i],
+          y: jsonData.rotations.values[i]
         })
+        xyDataCompactRate.push({
+          x: jsonData.compact_rate.labels[i],
+          y: jsonData.compact_rate.values[i]
+        })
+
       }
       setData({
         labels: labels,
         datasets: [
           {
             label: 'Rotations/heure',
-            data: xyData,
+            data: xyDataRotations,
             borderColor: 'rgb(53, 162, 235)',
             backgroundColor: 'rgba(53, 162, 235, 0.5)',
+          },
+          {
+            label: 'Taux compactage moyen',
+            data: xyDataCompactRate,
+            borderColor: 'rgb(235, 53, 53)',
+            backgroundColor: 'rgba(235, 53, 53, 0.5)',
           },
         ],
       })
@@ -133,7 +146,16 @@ const RotationTrendHour = ({code, type}) => {
       </div>
     )
   }
-  return null
+  return (
+    <div>
+      <SkeletonTheme baseColor="#202020" highlightColor="#444">
+        <p>
+            <Skeleton count={1} height={30} />
+            <Skeleton count={1} height={370} />
+        </p>
+      </SkeletonTheme>
+    </div>
+  )
   
 }
 

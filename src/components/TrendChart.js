@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState, useCallback } from 'react'
 import { Line } from 'react-chartjs-2';
+import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import ZoomPlugin from  'chartjs-plugin-zoom'
 import 'chartjs-plugin-zoom'
 import {
@@ -238,7 +239,16 @@ const TrendChart = ({code, type}) => {
       </div>
     )
   }
-  return null
+  return (
+    <div>
+      <SkeletonTheme baseColor="#202020" highlightColor="#444">
+        <p>
+            <Skeleton count={1} height={30} />
+            <Skeleton count={1} height={370} />
+        </p>
+      </SkeletonTheme>
+    </div>
+  )
   
 }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -97,7 +98,15 @@ const SeasonBarChart = ({code, type}) => {
     }, [code, type, labels, currentTown]);
 
     if(!data){
-        return null
+        return (
+          <div>
+            <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                <p>
+                    <Skeleton count={1} height={400} />
+                </p>
+            </SkeletonTheme>
+          </div>
+        )
     }   
     return <Bar options={options} data={data} />;
 }
