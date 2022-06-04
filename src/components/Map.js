@@ -1,5 +1,5 @@
 import { React, useState, useEffect, useRef } from 'react'
-import { MapContainer, TileLayer, LayersControl, GeoJSON} from 'react-leaflet'
+import { MapContainer, TileLayer, GeoJSON} from 'react-leaflet'
 import { useNavigate } from "react-router-dom";
 import ReactDOMServer from 'react-dom/server'
 import axios from 'axios'
@@ -7,12 +7,12 @@ import Popup from './mapComponents/Popup'
 import 'leaflet/dist/leaflet.css'
 import './map.css'
 
-const { BaseLayer } = LayersControl
 const Colors = ["#E74C3C", "#9B59B6", "#3498DB", "#ECF0F1", "#F1C40F", "#2ECC71"] 
 
-const Maps = ({selected, type}) => {
+const Maps = ({selected, type, isStat}) => {
   //selected is the code property of the selected layer
   //type can be 'town' or 'unity' 
+  //isStat is true if we load stats page
   const navigate = useNavigate()
   const geoJsonRef = useRef()
   const [data, setData] = useState(null);
@@ -69,8 +69,8 @@ const Maps = ({selected, type}) => {
             case 'year':
               currentPeriodCluster = cluster.year
               break;
-            case 'day':
-              currentPeriodCluster = cluster.day
+            case 'week':
+              currentPeriodCluster = cluster.week
               break;
             default:
               break;
@@ -127,6 +127,20 @@ const Maps = ({selected, type}) => {
 
   }
 
+  const getImportantZones = async () => {
+    const response = await axios.get('http://127.0.0.1:8000/stats/waste/change-rate-by-season', {
+        headers: {"Access-Control-Allow-Origin": "*"}
+    })
+    setImportantZones(JSON.parse(response.data))
+  }
+
+  const getClusters = async () => {
+    const response = await axios.get('http://127.0.0.1:8000/all-towns/clustering', {
+          headers: {"Access-Control-Allow-Origin": "*"}
+      })
+      setCluster(JSON.parse(response.data))
+  }
+
   const selectClusterZones = () => {
     setIsClustering(true)
     setImportantZones(false)
@@ -137,6 +151,22 @@ const Maps = ({selected, type}) => {
     if(geoJsonRef){
       geoJsonRef.current.clearLayers()
       setClusterPeriod('month')
+      selectClusterZones()
+    }
+  }
+
+  const yearCluster = () => {
+    if(geoJsonRef){
+      geoJsonRef.current.clearLayers()
+      setClusterPeriod('year')
+      selectClusterZones()
+    }
+  }
+
+  const weekCluster = () => {
+    if(geoJsonRef){
+      geoJsonRef.current.clearLayers()
+      setClusterPeriod('week')
       selectClusterZones()
     }
   }
@@ -190,19 +220,11 @@ const Maps = ({selected, type}) => {
       if(data == null){
         getData();
       }
-      if(importantZones == null && selected == null){
-        axios.get('http://127.0.0.1:8000/stats/waste/change-rate-by-season', {
-          headers: {"Access-Control-Allow-Origin": "*"}
-        }).then((response) => {
-          setImportantZones(JSON.parse(response.data))
-        });
+      if(importantZones == null && selected == null && type == null){
+        getImportantZones()
       }
-      if(cluster == null && selected == null){
-        axios.get('http://127.0.0.1:8000/all-towns/clustering', {
-          headers: {"Access-Control-Allow-Origin": "*"}
-        }).then((response) => {
-          setCluster(JSON.parse(response.data))
-        });
+      if(cluster == null && selected == null && type == null){
+        getClusters()
       }
         
     }, []);
@@ -238,7 +260,7 @@ const Maps = ({selected, type}) => {
 
 
   const MapControl = () => {
-    if(!selected){
+    if(!selected && !isStat){
       return (
         <div className='ml-4 h-full w-1/3 bg-dark-100 rounded shadow-lg overflow-hidden'>
           <p className='text-gray-300 font-bold text-center pt-4'>Zones importantes</p>
@@ -254,9 +276,9 @@ const Maps = ({selected, type}) => {
           </div>
           <p className='text-gray-300 font-bold text-center pt-4 mt-3'>Groupement par tandence</p>
           <div className='flex justify-between mx-2 mt-3'>
-            <button className='w-20 mt-1 bg-dark-50 hover:bg-gray-700 text-gray-300 rounded-sm' onClick={markWinter}>année</button>
+            <button className='w-20 mt-1 bg-dark-50 hover:bg-gray-700 text-gray-300 rounded-sm' onClick={yearCluster}>année</button>
             <button className='w-20 mt-1 bg-dark-50 hover:bg-gray-700 text-gray-300 rounded-sm' onClick={monthCluster}>mois</button>
-            <button className='w-20 mt-1 bg-dark-50 hover:bg-gray-700 text-gray-300 rounded-sm' onClick={markAutumn}>jour</button>
+            <button className='w-20 mt-1 bg-dark-50 hover:bg-gray-700 text-gray-300 rounded-sm' onClick={weekCluster}>semaine</button>
           </div>
           <p className='text-gray-300 font-bold text-center pt-4 mt-4'>Données géographiques</p>
           <div className='flex justify-center mt-3'>
@@ -266,6 +288,7 @@ const Maps = ({selected, type}) => {
         </div>
       )
     }
+     
     return null
   }
 
@@ -273,20 +296,10 @@ const Maps = ({selected, type}) => {
     <div className='map-container h-3/6 flex justify-between rounded shadow-lg'>
         <MapContainer id='mapId' className='map' center={[36.7218005, 3.0988167]} zoom={10}>
             <MyData/>
-            <LayersControl>
-                <BaseLayer name='OSM'>
-                    <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                </BaseLayer>
-                <BaseLayer checked name='test'>
                 <TileLayer
                     attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
                     url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png'
                 />
-                </BaseLayer>
-            </LayersControl>
         </MapContainer>
         <MapControl/>
     </div>
