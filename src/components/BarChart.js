@@ -114,10 +114,26 @@ const BarChart = ({code, type, year, month}) => {
     //return <Bar options={options} data={data} />;
     return (
       <Plot
-        data={[
-          {type: 'bar', x: labels, y: data}
-        ]}
-        layout={{title: 'Taux de compactage', plot_bgcolor:"#0F0E0E", paper_bgcolor:"#0F0E0E"}}
+        data={[{
+          type: 'bar', 
+          x: labels, 
+          y: data,
+          marker: {
+            color: ["#800026",'#9F0026', "#BD0026", "#D00D21", "#E31A1C", '#F03423', "#FC4E2A", "#FD6E33", "#FD8D3C", "#FEB24C", "#FEC661", "#FED976", "#FFEDA0", '#FFF3C0', '#FFF9DF', "#FFFFFF"]  
+          }
+        }]}
+        layout={{
+          title: {text:'Taux de compactage par marque de véhicule', font:{color:'#d1d5db'}},
+          xaxis:{
+            color: '#d1d5db'
+          },
+          yaxis:{
+            color: '#d1d5db'
+          }, 
+          plot_bgcolor:"#0F0E0E", 
+          paper_bgcolor:"#0F0E0E",
+        }}
+        
       />
     )
 }
