@@ -8,6 +8,8 @@ import WasteBinIcon from '../images/WasteBinIcon'
 import VehicleIcon from '../images/VehicleIcon'
 import axios from 'axios'
 import BarChart from '../components/BarChart'
+import PieChart from '../components/PieChart'
+import StatsTrendWaste from '../components/StatsTrendWaste'
 
 const Statistics = () => {
     const parameters = useParams()
@@ -160,6 +162,29 @@ const Statistics = () => {
                 :
                   null
                 }
+              </div>
+              <div className='w-auto h-full mx-1 bg-dark-100 rounded overflow-hidden shadow-lg mb-5'>
+                {parameters ?
+                  <PieChart year={parameters.year} month={parameters.month} />
+                :
+                  null
+                }
+              </div>
+            </div>
+            <div className='flex justify-around mt-2 mx-4'>
+              <div className='w-auto h-full mx-1 bg-dark-100 rounded overflow-hidden shadow-lg mb-5'>
+                  {parameters ?
+                    <StatsTrendWaste year={parameters.year} month={parameters.month} />
+                  :
+                    null
+                  }
+              </div>
+              <div className='w-auto h-full mx-1 bg-dark-100 rounded overflow-hidden shadow-lg mb-5'>
+                  {parameters ?
+                    <PieChart year={parameters.year} month={parameters.month} />
+                  :
+                    null
+                  }
               </div>
             </div>
         </div>
