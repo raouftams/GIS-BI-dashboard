@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { Line } from 'react-chartjs-2';
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import ZoomPlugin from  'chartjs-plugin-zoom'
+import Plot from 'react-plotly.js';
 import 'chartjs-plugin-zoom'
 import {
   Chart as ChartJS,
@@ -102,27 +103,12 @@ const TrendChart = ({code, type}) => {
       })
       setIsSending(false)
       const jsonData = JSON.parse(response.data)
-      setLabels(jsonData.labels)
-      //turning data to x: y format
-      const xyData = []
+      const parsedLabels = []
       for(var i=0; i<jsonData.labels.length; i++){
-        xyData.push({
-          x: jsonData.labels[i],
-          y: jsonData.values[i]
-        })
+        parsedLabels.push(new Date(jsonData.labels[i]))
       }
-      setData({
-        labels: labels,
-        datasets: [
-          {
-            label: 'Quantité déchet',
-            data: xyData,
-            borderColor: 'rgb(53, 162, 235)',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)',
-          },
-        ],
-      })
-
+      setLabels(parsedLabels)
+      setData(jsonData.values)
     }
     if(currentTown !== code){
       setCurrentTown(code)
@@ -142,25 +128,12 @@ const TrendChart = ({code, type}) => {
       headers: {"Access-Control-Allow-Origin": "*"}
     }).then((response) => {
       const jsonData = JSON.parse(response.data)
-      const xyData = []
+      const parsedLabels = []
       for(var i=0; i<jsonData.labels.length; i++){
-        xyData.push({
-          x: jsonData.labels[i],
-          y: jsonData.values[i]
-        })
+        parsedLabels.push(new Date(jsonData.labels[i]))
       }
-      setLabels(jsonData.labels)
-      setData({
-        labels: jsonData.labels,
-        datasets: [
-          {
-            label: 'Quantité déchet',
-            data: xyData,
-            borderColor: 'rgb(53, 162, 235)',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)',
-          },
-        ],
-      })
+      setLabels(parsedLabels)
+      setData(jsonData.values)
       // once the request is sent, update state again
       setIsSending(false)
     })  
@@ -210,7 +183,7 @@ const TrendChart = ({code, type}) => {
     //extracting years from labels format (dd-mm-yy)
     const extractedYears = []
     for(var i=0; i<labels.length; i++){
-      extractedYears.push("20".concat(labels[i].substring(6, 8)))
+      extractedYears.push(labels[i].getFullYear())
     }
     if(!years){
       setYears(Array.from(new Set(extractedYears)))
@@ -218,6 +191,7 @@ const TrendChart = ({code, type}) => {
   }
   
   if(data && labels && years){
+    console.log(labels)
     return(
       <div>
         <div className='flex justify-between mx-10'>
@@ -235,7 +209,26 @@ const TrendChart = ({code, type}) => {
             <button className='w-20 mt-1 mx-1 bg-dark-50 hover:bg-gray-700 text-white rounded-sm' onClick={getDayData}>Jour</button>
           </div>
         </div>
-        <Line options={options} data={data} labels={labels} />
+          <Plot
+            data={[{
+              type: 'scatter', 
+              x: labels, 
+              y: data
+            }]}
+            layout={{
+              width: 800,
+              title: {text:'Quantity de déchets par heure (T/H)', font:{color:'#d1d5db'}},
+              xaxis:{
+                color: '#d1d5db'
+              },
+              yaxis:{
+                color: '#d1d5db'
+              }, 
+              plot_bgcolor:"#0F0E0E", 
+              paper_bgcolor:"#0F0E0E",
+            }}
+
+          />
       </div>
     )
   }
