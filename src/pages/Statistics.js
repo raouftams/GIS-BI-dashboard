@@ -10,6 +10,7 @@ import axios from 'axios'
 import BarChart from '../components/BarChart'
 import PieChart from '../components/PieChart'
 import StatsTrendWaste from '../components/StatsTrendWaste'
+import DaysBarChart from '../components/DaysBarChart'
 
 const Statistics = () => {
     const parameters = useParams()
@@ -22,19 +23,29 @@ const Statistics = () => {
 
 
     const loadTowns = () => {
-        navigate("/stats/town/".concat(parameters.dataType).concat("/").concat(parameters.year).concat("/").concat(parameters.month))
+      navigate("/stats/town/".concat([parameters.dataType, parameters.year, parameters.month].join('/')))
     }
 
     const loadUnities = () => {
-        navigate("/stats/unity/".concat(parameters.dataType).concat("/").concat(parameters.year).concat("/").concat(parameters.month))
+      navigate("/stats/unity/".concat([parameters.dataType, parameters.year, parameters.month].join('/')))
     }
 
     const loadQuantityData = () => {
-        navigate("/stats/".concat(parameters.type).concat("/quantity/").concat(parameters.year).concat("/").concat(parameters.month))
+      if(parameters.code){
+        navigate(`/stats/${parameters.type}/quantity/${parameters.year}/${parameters.month}/${parameters.code}`)
+      }else{
+
+      navigate(`/stats/${parameters.type}/quantity/${parameters.year}/${parameters.month}`)
+      }
     }
 
     const loadEfficiencyData = () => {
-        navigate("/stats/".concat(parameters.type).concat("/efficiency/").concat(parameters.year).concat("/").concat(parameters.month))
+      if(parameters.code){
+        navigate(`/stats/${parameters.type}/efficiency/${parameters.year}/${parameters.month}/${parameters.code}`)
+      }
+      else{
+        navigate(`/stats/${parameters.type}/efficiency/${parameters.year}/${parameters.month}`)
+      }
     }
 
     const changeYear = (e) => {
@@ -44,7 +55,11 @@ const Statistics = () => {
       setSelectedMonth(e.target.value)
     }
     const filterData = () => {
-      navigate("/stats/".concat(parameters.type).concat("/").concat(parameters.dataType).concat("/").concat(selectedYear).concat("/").concat(selectedMonth))
+      if(parameters.code){
+        navigate(`/stats/${parameters.type}/${parameters.dataType}/${selectedYear}/${selectedMonth}/${parameters.code}`)
+      }else{
+        navigate(`/stats/${parameters.type}/${parameters.dataType}/${selectedYear}/${selectedMonth}`)
+      }
     }
 
     useEffect(() => {
@@ -64,7 +79,10 @@ const Statistics = () => {
   
       //get general Informations 
       const getCardsData = async () => {
-        const url = `http://127.0.0.1:8000/statistics/all-towns/info/${parameters.year}/${parameters.month}`
+        var url = `http://127.0.0.1:8000/statistics/all-towns/info/${parameters.year}/${parameters.month}`
+        if(parameters.code){
+          url = `http://127.0.0.1:8000/statistics/${parameters.type}/${parameters.code}/info/${parameters.year}/${parameters.month}`
+        }
         const response = await axios.get(url, {
             headers: {"Access-Control-Allow-Origin": "*"}
         })
@@ -72,7 +90,7 @@ const Statistics = () => {
       }
       getCardsData()
         
-    }, [parameters])
+    }, [parameters, months, years])
 
     return (
         <div>
@@ -85,7 +103,7 @@ const Statistics = () => {
                 </div>
                 <div className='w-2/3 h-2/4 mt-3'>
                     {parameters ?
-                        <StatsMap type={parameters.type} dataName={parameters.dataType} filter={{"year": parameters.year, "month": parameters.month}}/>
+                        <StatsMap selected={parameters.code} type={parameters.type} dataName={parameters.dataType} filter={{"year": parameters.year, "month": parameters.month}}/>
                     :
                         null
                     }  
@@ -156,16 +174,16 @@ const Statistics = () => {
               </div>
             </div>
             <div className='flex justify-around mt-2 mx-4'>
-              <div className='w-auto h-full mx-1 bg-dark-100 rounded overflow-hidden shadow-lg mb-5'>
+              <div className='w-auto h-full mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
                 {parameters ?
-                  <BarChart year={parameters.year} month={parameters.month} />
+                  <BarChart code={parameters.code} type={parameters.type} year={parameters.year} month={parameters.month} />
                 :
                   null
                 }
               </div>
-              <div className='w-auto h-full mx-1 bg-dark-100 rounded overflow-hidden shadow-lg mb-5'>
+              <div className='w-auto h-full mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
                 {parameters ?
-                  <PieChart year={parameters.year} month={parameters.month} />
+                  <PieChart code={parameters.code} type={parameters.type} year={parameters.year} month={parameters.month} />
                 :
                   null
                 }
@@ -174,14 +192,14 @@ const Statistics = () => {
             <div className='flex justify-around mt-2 mx-4'>
               <div className='w-auto h-full mx-1 bg-dark-100 rounded overflow-hidden shadow-lg mb-5'>
                   {parameters ?
-                    <StatsTrendWaste year={parameters.year} month={parameters.month} />
+                    <StatsTrendWaste code={parameters.code} type={parameters.type} year={parameters.year} month={parameters.month} />
                   :
                     null
                   }
               </div>
               <div className='w-auto h-full mx-1 bg-dark-100 rounded overflow-hidden shadow-lg mb-5'>
                   {parameters ?
-                    <PieChart year={parameters.year} month={parameters.month} />
+                    <DaysBarChart code={parameters.code} type={parameters.type} year={parameters.year} month={parameters.month} />
                   :
                     null
                   }

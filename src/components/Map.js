@@ -127,11 +127,12 @@ const Maps = ({selected, type, isStat}) => {
 
   }
 
-  const getImportantZones = async () => {
-    const response = await axios.get('http://127.0.0.1:8000/stats/waste/change-rate-by-season', {
+  const getImportantZones = () => {
+    axios.get('http://127.0.0.1:8000/stats/waste/change-rate-by-season', {
         headers: {"Access-Control-Allow-Origin": "*"}
+    }).then((response) => {
+      setImportantZones(JSON.parse(response.data))
     })
-    setImportantZones(JSON.parse(response.data))
   }
 
   const getClusters = async () => {
@@ -220,10 +221,10 @@ const Maps = ({selected, type, isStat}) => {
       if(data == null){
         getData();
       }
-      if(importantZones == null && selected == null && type == null){
+      if(importantZones == null && selected == null){
         getImportantZones()
       }
-      if(cluster == null && selected == null && type == null){
+      if(cluster == null && selected == null){
         getClusters()
       }
         
@@ -271,7 +272,7 @@ const Maps = ({selected, type, isStat}) => {
             </div>
             <div className='flex-col justify-center'>
               <button className='w-24 mt-1 bg-dark-50 hover:bg-gray-700 text-gray-300 rounded-sm' onClick={markSummer}>été</button>
-              <button className='w-24 mt-1 bg-dark-50 hover:bg-gray-700 text-gray-300 rounded-sm' onClick={markAutumn}>autumn</button>
+              <button className='w-24 mt-1 bg-dark-50 hover:bg-gray-700 text-gray-300 rounded-sm' onClick={markAutumn}>automne</button>
             </div>
           </div>
           <p className='text-gray-300 font-bold text-center pt-4 mt-3'>Groupement par tandence</p>

@@ -2,56 +2,6 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Plot from 'react-plotly.js';
-import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import { useParams } from 'react-router-dom';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-export const options = {
-  responsive: true,
-  maintainAspectRatio: false,
-  scales: {
-    y: {
-      ticks: {
-        color: 'white',
-      }
-    },
-    x: {
-      ticks: {
-        color: 'white',
-      }
-    },
-  },
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      color: '#d1d5db',
-      bold: true,
-      display: true,
-      text: 'Quantité de déchet',
-    },
-  },
-};
-
 
 
 const StatsTrendWaste = ({code, type, year, month}) => {
@@ -60,15 +10,14 @@ const StatsTrendWaste = ({code, type, year, month}) => {
     const [currentTown, setCurrentTown] = useState()
     const [currentYear, setCurrentYear] = useState(null)
     const [currentMonth, setCurrentMonth] = useState(null)
-    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         var url = `http://127.0.0.1:8000/statistics/all-towns/waste-trend-hour/${year}/${month}`
         if(code){
           if(type && type === 'unity'){
-            url = `http://127.0.0.1:8000/stats/waste/holidays/unity/${code.code}`  
+            url = `http://127.0.0.1:8000/statistics/unity/${code}/waste-trend-hour/${year}/${month}`  
           }else{
-            url = `http://127.0.0.1:8000/stats/waste/holidays/town/${code.code}`
+            url = `http://127.0.0.1:8000/statistics/town/${code}/waste-trend-hour/${year}/${month}`
           }
         }
         const getData = async () => {
@@ -81,13 +30,15 @@ const StatsTrendWaste = ({code, type, year, month}) => {
             setData(jsonData.values)
         }
 
-        if(currentMonth !== month || currentYear !== year){
+        if(currentMonth !== month || currentYear !== year || currentTown !== code){
             getData()
             setCurrentMonth(month)
             setCurrentYear(year)
+            setCurrentTown(code)
         }
-    },[currentMonth, currentYear, year, month])
+    },[currentMonth, currentYear, currentTown, year, month, code, type])
 
+    
     return (
       <Plot
         data={[{

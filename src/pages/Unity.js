@@ -13,7 +13,6 @@ import VehicleIcon from '../images/VehicleIcon'
 import WasteBinIcon from '../images/WasteBinIcon'
 import UserIcon from '../images/UserIcon'
 import RotationTrend from '../components/RotationTrend'
-import RotationTrendHour from '../components/RotationTrendHour'
 import './main.css'
 
 
@@ -52,13 +51,9 @@ const Unity = () => {
                 <Card title={'Population'} image={<UserIcon/>} value={unityInfo ? unityInfo.population : 0}/>
               </div>
             </div>
-            <div className='flex justify-around mt-2 mx-4'>
-                <div className='w-3/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-                    <TrendChart code={unityCode} type={'unity'}/>
-                </div>
-                <div className='w-2/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-                    <HolidayBarChart code={unityCode} type={'unity'}/>
-                </div>
+            
+            <div className='h-auto mx-4 bg-dark-100 rounded overflow-hidden shadow-lg'>
+                <TrendChart code={unityCode} type={'unity'}/>
             </div>
             <div className='flex justify-around mt-2 mx-4'>
                 <div className='w-2/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
@@ -73,7 +68,7 @@ const Unity = () => {
                 <RotationTrend code={unityCode} type={'unity'}/>
               </div>
               <div className='w-3/6 h-auto ml-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-                <RotationTrendHour code={unityCode} type={'unity'}/>
+                <HolidayBarChart code={unityCode} type={'unity'}/>
               </div>
             </div>
         </div>

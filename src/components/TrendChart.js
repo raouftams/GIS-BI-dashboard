@@ -1,84 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState, useCallback } from 'react'
-import { Line } from 'react-chartjs-2';
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
-import ZoomPlugin from  'chartjs-plugin-zoom'
 import Plot from 'react-plotly.js';
-import 'chartjs-plugin-zoom'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ZoomPlugin,
-  Title,
-  Tooltip,
-  Legend
-);
-
-const options = {
-  responsive: true,
-  scales: {
-    y: {
-      grid: {
-        drawBorder: true,
-        color: '#7c7e82'
-      },
-      ticks: {
-        color: 'white',
-      }
-    },
-    x: {
-      ticks: {
-        color: 'white',
-      }
-    },
-  },
-  plugins: {
-    zoom:{
-      pan:{
-        enabled: true,
-        mode: 'xy',
-        speed: 10,
-        threshold: 10
-      },
-      zoom: {
-        wheel: {
-          enabled: true // SET SCROOL ZOOM TO TRUE
-        },
-        pinch: {
-          enabled: true
-        },
-        drag: true,
-        mode: 'x'
-      }
-    },
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      color: '#d1d5db',
-      bold: true,
-      text: 'Evolution de la quantité de déchets',
-    },
-  },
-};
 
 const TrendChart = ({code, type}) => {
   const [data, setData] = useState()
   const [labels, setLabels] = useState()
+  const [predictions, setPredctions] = useState()
+  const [predictionLabels, setPredctionLabels] = useState()
   const [years, setYears] = useState()
   const [currentTown, setCurrentTown] = useState()
   const [selectedYear, setSelecteYear] = useState('')
@@ -128,12 +57,26 @@ const TrendChart = ({code, type}) => {
       headers: {"Access-Control-Allow-Origin": "*"}
     }).then((response) => {
       const jsonData = JSON.parse(response.data)
+      const originalData = []
       const parsedLabels = []
+      const parsedPredictedLabels = []
+      const predictedData = []
+      const predictionStartDate = new Date('2022-01-01')
       for(var i=0; i<jsonData.labels.length; i++){
-        parsedLabels.push(new Date(jsonData.labels[i]))
+        let currentDate = new Date(jsonData.labels[i])
+        if(currentDate >= predictionStartDate){
+          //predicted data
+          parsedPredictedLabels.push(currentDate)
+          predictedData.push(jsonData.values[i])
+        }else{
+          parsedLabels.push(currentDate)
+          originalData.push(jsonData.values[i])
+        }
       }
       setLabels(parsedLabels)
-      setData(jsonData.values)
+      setData(originalData)
+      setPredctionLabels(parsedPredictedLabels)
+      setPredctions(predictedData)
       // once the request is sent, update state again
       setIsSending(false)
     })  
@@ -191,7 +134,6 @@ const TrendChart = ({code, type}) => {
   }
   
   if(data && labels && years){
-    console.log(labels)
     return(
       <div>
         <div className='flex justify-between mx-10'>
@@ -202,7 +144,7 @@ const TrendChart = ({code, type}) => {
               <option value={date} key={date}>{date}</option>
             ))}
           </select>
-          <div className="font-bold text-base mt-1 text-gray-300">Décomposition: </div>
+          <div className="font-bold text-base mt-1 text-gray-300">Fréquence: </div>
           <div>
             <button className='w-20 mt-1 mx-1 bg-dark-50 hover:bg-gray-700 text-white rounded-sm' onClick={getYearData}>Année</button>
             <button className='w-20 mt-1 mx-1 bg-dark-50 hover:bg-gray-700 text-white rounded-sm' onClick={getMonthData}>Mois</button>
@@ -210,14 +152,28 @@ const TrendChart = ({code, type}) => {
           </div>
         </div>
           <Plot
-            data={[{
-              type: 'scatter', 
-              x: labels, 
-              y: data
-            }]}
+          
+            data={[
+              {
+                type: 'scatter',
+                mode: 'lines', 
+                name: 'Observations',
+                x: labels, 
+                y: data
+              }, 
+              {
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Prédictions',
+                line: {color:'red'},
+                
+                x: predictionLabels, 
+                y: predictions
+              }, 
+            ]}
             layout={{
-              width: 800,
-              title: {text:'Quantity de déchets par heure (T/H)', font:{color:'#d1d5db'}},
+              width: 1335,
+              title: {text:'Evolution de la quantity de déchets (en KG)', font:{color:'#d1d5db'}},
               xaxis:{
                 color: '#d1d5db'
               },

@@ -28,12 +28,12 @@ const StatsMap = ({selected, type, dataName, filter}) => {
 
   const getSelectedTown = (e) => {
     const properties = e.target.feature.properties
-    navigate("/stats/town/".concat(properties.code))
+    navigate("/stats/".concat([type, dataName, filter.year, filter.month].join('/')).concat("/", properties.code))
   }
 
   const getSelectedUnity = (e) => {
     const properties = e.target.feature.properties
-    navigate("/stats/unity/".concat(properties.code))
+    navigate("/stats/".concat([type, dataName, filter.year, filter.month].join('/')).concat("/", properties.code))
   }
 
   const openPopup = (e) => {
@@ -61,14 +61,7 @@ const StatsMap = ({selected, type, dataName, filter}) => {
           })
         }
 
-        //if town is selected then set style to the polygon
-        if(selected && selected.code === feature.properties.code)
-          layer.setStyle({
-            color: "red",
-            fillColor: "red",
-            fillOpacity: "0.4"
-        })
-    
+   
         //adding colors to data by value
         if(styleMapData !== null){
             const valueIndex = styleMapData.regions.indexOf(feature.properties.code)
@@ -87,6 +80,14 @@ const StatsMap = ({selected, type, dataName, filter}) => {
                 })
             }
         }
+
+        //if town is selected then set style to the polygon
+        if(selected === feature.properties.code)
+          layer.setStyle({
+            color: "green",
+            fillColor: "green",
+            fillOpacity: "0.4"
+        })
 
 
         //Adding popup to the feature

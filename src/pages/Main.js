@@ -10,8 +10,6 @@ import SeasonalityChart from '../components/SeasonalityChart'
 import SeasonBarChart from '../components/SeasonBarChart'
 import TrendChart from '../components/TrendChart'
 import HolidayBarChart from '../components/HolidayBarChart'
-import RotationTrendHour from '../components/RotationTrendHour'
-import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 import './main.css'
@@ -33,56 +31,11 @@ const Main = () => {
   }, [])
 
   const WasteStats = () =>{
-    if(!info){
-      return(
-        <div>
-          <div className='flex justify-around mt-2 mx-4'>
-            <div className='w-3/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-            <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                <p>
-                    <Skeleton count={1} height={30} />
-                    <Skeleton count={1} height={370} />
-                </p>
-            </SkeletonTheme>
-            </div>
-            <div className='w-2/5 h-auto ml-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-            <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                <p>
-                    <Skeleton count={1} height={400} />
-                </p>
-            </SkeletonTheme>
-            </div>
-          </div>
-          <div className='flex justify-around mt-2 mx-4'>
-            <div className='w-2/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-            <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                <p>
-                    <Skeleton count={1} height={400} />
-                </p>
-            </SkeletonTheme>
-            </div>
-            <div className='w-4/5 h-auto ml-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-            <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                <p>
-                    <Skeleton count={1} height={30} />
-                    <Skeleton count={1} height={370} />
-                </p>
-            </SkeletonTheme>
-            </div>
-          </div>
-        </div>
-      )  
-    }
     return (
       <div>
-        <div className='flex justify-around mt-2 mx-4'>
-          <div className='w-3/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+        <div className='h-auto mx-4 mt-2 bg-dark-100 rounded overflow-hidden shadow-lg'>
             <TrendChart code={null}/>
           </div>
-          <div className='w-2/5 h-auto ml-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-            <HolidayBarChart code={null}/>
-          </div>
-        </div>
         <div className='flex justify-around mt-2 mx-4'>
           <div className='w-2/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
             <SeasonBarChart code={null}/>
@@ -102,11 +55,11 @@ const Main = () => {
     }
     return (
         <div className='flex justify-around mt-2 mx-4'>
-          <div className='w-3/6 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+          <div className='w-3/5 h-auto mx-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
             <RotationTrend code={null}/>
           </div>
-          <div className='w-3/6 h-auto ml-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
-            <RotationTrendHour code={null}/>
+          <div className='w-2/5 h-auto ml-1 bg-dark-100 rounded overflow-hidden shadow-lg'>
+            <HolidayBarChart code={null}/>
           </div>
         </div>
         

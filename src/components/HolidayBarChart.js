@@ -45,7 +45,7 @@ export const options = {
       color: '#d1d5db',
       bold: true,
       display: true,
-      text: 'Quantité de déchet',
+      text: 'Quantité de déchet par fête musulmane',
     },
   },
 };

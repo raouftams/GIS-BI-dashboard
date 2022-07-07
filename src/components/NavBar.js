@@ -23,7 +23,7 @@ function NavBar() {
                     to="/dashboard"
                     className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
-                    Déchets
+                    Accueil
                   </Link>
 
                   <Link
@@ -32,15 +32,16 @@ function NavBar() {
                   >
                     Statistiques
                   </Link>
-
-                  <Link
-                    to="/vehicles"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    Cammions
-                  </Link>
                 </div>
               </div>
+            </div>
+            <div className="-mr-2 flex">
+              <Link
+                to="/"
+                className="text-red-500 hover:bg-red-500 hover:text-white -mr-2 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Se déconnecter
+              </Link>
             </div>
             <div className="-mr-2 flex md:hidden">
               <button
@@ -120,13 +121,6 @@ function NavBar() {
                     className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Statistiques
-                  </Link>
-
-                  <Link
-                    to="/vehicles"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    Cammions
                   </Link>
               </div>
             </div>

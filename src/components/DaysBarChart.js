@@ -4,7 +4,7 @@ import axios from 'axios';
 import Plot from 'react-plotly.js';
 
 
-const BarChart = ({code, type, year, month}) => {
+const DaysBarChart = ({code, type, year, month}) => {
     const [data, setData] = useState()
     const [labels, setLabels] = useState()
     const [currentTown, setCurrentTown] = useState()
@@ -12,12 +12,12 @@ const BarChart = ({code, type, year, month}) => {
     const [currentMonth, setCurrentMonth] = useState(null)
 
     useEffect(() => {
-        var url = `http://127.0.0.1:8000/statistics/all-towns/vehicle-efficiency-mark/${year}/${month}`
+        var url = `http://127.0.0.1:8000/statistics/all-towns/waste-quantity-day/${year}/${month}`
         if(code){
           if(type && type === 'unity'){
-            url = `http://127.0.0.1:8000/statistics/unity/${code}/vehicle-efficiency-mark/${year}/${month}`  
+            url = `http://127.0.0.1:8000/statistics/unity/${code}/waste-quantity-day/${year}/${month}`  
           }else{
-            url = `http://127.0.0.1:8000/statistics/town/${code}/vehicle-efficiency-mark/${year}/${month}`
+            url = `http://127.0.0.1:8000/statistics/town/${code}/waste-quantity-day/${year}/${month}`
           }
         }
         const getData = async () => {
@@ -45,11 +45,11 @@ const BarChart = ({code, type, year, month}) => {
           x: labels, 
           y: data,
           marker: {
-            color: ["#800026",'#9F0026', "#BD0026", "#D00D21", "#E31A1C", '#F03423', "#FC4E2A", "#FD6E33", "#FD8D3C", "#FEB24C", "#FEC661", "#FED976", "#FFEDA0", '#FFF3C0', '#FFF9DF', "#FFFFFF"]  
+            color: ["#800026","#BD0026", "#E31A1C", '#F03423', "#FC4E2A", "#FD6E33", "#FD8D3C", "#FEB24C", "#FEC661", "#FED976", "#FFEDA0", '#FFF3C0', '#FFF9DF', "#FFFFFF"]  
           }
         }]}
         layout={{
-          title: {text:'Taux de compactage par marque de véhicule', font:{color:'#d1d5db'}},
+          title: {text:'Quantity de déchets par jour de semaine (tonne)', font:{color:'#d1d5db'}},
           xaxis:{
             color: '#d1d5db'
           },
@@ -64,4 +64,4 @@ const BarChart = ({code, type, year, month}) => {
     )
 }
 
-export default BarChart
+export default DaysBarChart
