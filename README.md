@@ -10,4 +10,4 @@ This dashboard contains two main interfaces, the first one opens on a complete v
 *Sorry for not making a demo, the data used in the project is confidential.*
 
 ![Main interface](images/dashboard_all.png)
-![Second interface](images/stats_all.png)
+![Second interface](images/stats-all.png)
