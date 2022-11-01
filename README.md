@@ -1,6 +1,6 @@
 ﻿## Business intelligence dashboard for solid waste management.
 
-This is an interactive geographic dashboard for data visualization in different aspects (geographic, graphical and tabular) and allows statistical analysis for the purpose of drawing conclusions and making decisions.
+This is an interactive geographic dashboard built with react js for data visualization in different aspects (geographic, graphical and tabular) and allows statistical analysis for the purpose of drawing conclusions and making decisions.
 
 The data used in this project is related to the operation of collection and transportation of solid waste in algiers, Algeria. 
 This app is connected to an api that we created to analyse data and make prediction with machine learning, for more information about this api [click here](https://github.com/raouftams/SWM_ML_API).
